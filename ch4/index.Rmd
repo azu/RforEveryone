@@ -1,0 +1,298 @@
+---
+title: "Ch 4 Rの基本"
+author: "azu"
+date: "2015年8月1日"
+output: html_document
+---
+
+## 4.1 基本的な数学
+
+普通の演算
+
+演算子の基本的な順序である PEMDAS に従います。PEMDAS と は、Parenthesis(括弧)、Exponents(指数)、Multiplication(乗算)、Division(除算)、 Addition(加算)、Subtraction(減算)の順番のことです
+
+```{r}
+4/3
+```
+
+## 4.2 変数
+
+Rの変数は動的
+
+```{r}
+x <- 2
+# ==
+x = 3
+print(x);
+# assignもある
+assign("x", 4)
+print(x)
+```
+
+> R コミュニティで最も一般的に使われる代入法は、左矢印(<-)です
+
+`<-`が一般的に使われれる
+
+```{r}
+rm(x)
+# 削除 -> GC対象
+```
+
+削除してもすぐメモリから消えるわけじゃくてgcで回収する。
+
+## 4.3:データ型
+
+Rはメインなデータ型は4つ
+
+- numeric
+- caracter
+- Date/POISXct
+- logical(boolean)
+
+データ型は`class`関数で調べられる。
+
+```{r}
+x = 10
+class(x)
+```
+
+numericがよく使われるもので、数字を上手く扱える
+
+> これは、他の言語における float や double に似ています。numeric は整数と小数、正数と 負数、そしてもちろんゼロを取り扱います
+
+
+```{r}
+is.numeric(x)
+```
+```{r}
+
+```
+
+でnumbericかを判定できる。
+
+整数のみを扱う`integer`型もあり、これは`L`というsuffixを使えることで書けて、少数などにならない。
+
+```{r}
+i <- 5L
+is.integer(i)
+```
+
+ただ、numeric ∋ integerなので以下もTRUEになる
+
+```{r}
+is.numeric(i)
+```
+
+Rは自動的にinteger -> numricの型変換をやってくれる
+
+```{r}
+class(1L / 5)
+```
+
+## 4.3.2 : 文字データ
+
+文字データはcharacterとfactorの2つ
+
+
+```{r}
+str <- "data"
+print(str)
+fac <- factor("data")
+print(fac)
+```
+
+文字列の長さは`nchar`で求める
+
+```{r}
+nchar("str")
+```
+
+## 4.3.3 : 日付
+
+> 最も役に立つ型は Date と POSIXct です。Date は日付だけを保持するのに対し、POSIXct は日付と時間を保 持します。
+
+Dateは日付だけ
+
+```{r}
+date1 <- as.Date("2012-06-28")
+print(date1)
+print(as.numeric(date1))
+```
+
+PosiXctは時間も持ってる
+
+```{r}
+date2 <- as.POSIXct("2012-06-28 17:42")
+print(date2)
+print(as.numeric(date2))
+```
+
+## 4.3.4 : 論理値
+
+```{r}
+print(TRUE*5)
+print(FALSE*5)
+```
+
+trueは1、falseは0。
+真偽値かどうかは`is.logical`で判定
+
+```{r}
+is.logical(TRUE)
+```
+
+> R では T と F という TRUE と FALSE に対応する短縮形が使えます。しかし、それらを使う のは推奨されません。なぜなら、T および F は TRUE および FALSE が格納された単なる変数 であり、上書きが可能だからです
+
+T/Fという変数があるのか。
+
+## 4.4 : ベクトル
+
+同じ型の要素を集めたもの。
+ベクトルに対しての操作はその各要素に適当される。
+なのでループは不要となる。
+
+`c` combine関数でベクトルを作成できる
+
+```{r}
+x <- c(1,2,3,4,5,6,6,7,8,9,10)
+x
+```
+
+### 4.4.1 : ベクトル演算
+
+```{r}
+x * 3
+```
+
+全ての要素に3かけてる。
+
+ベクトル同士の演算も行える。
+
+```{r}
+# 長さは同じ10
+x <- 1:10
+y <- -5:4
+sprintf("x:%d y:%d", length(x),length(y))
+x + y
+```
+
+長さが違う場合は、短いほうが長い方と同じとなるように繰り返される。
+倍数があわないと警告がある。
+
+
+```{r}
+x + c(1,2)
+```
+
+比較も動作する
+
+```{r}
+x <= 5
+```
+
+全てがどうなのかというのを検証する場合は`any`と`all`を使う
+
+```{r}
+print(any(x < y))
+print(all(x < y))
+```
+
+vectorの各要素へのアクセスは`x[n]`で行い、start with 1である。
+
+```{r}
+x[1]
+```
+
+連続した範囲を取り出す
+
+```{r}
+x[1:2]
+```
+
+連続してない点をベクトルを取り出す
+
+```{r}
+x[c(1,4)]
+```
+
+Vectorには名前を与えることができる
+
+```{r}
+c(One = "a", Two = "y", Last="r")
+```
+
+後から名前をつける場合は`names`を使う
+
+```{r}
+w <- 1:3
+names(w) <- c("a", "b", "c")
+w
+```
+
+## 4.4.2 factorベクトル
+
+factorはlevelsというのもの持ってる。
+levelsはその変数の重複のない値となってる。
+
+```{r}
+q <- c("Hockey", "Football", "Baseball", "Curling", "Rugby", "Lacrosse", "Basketball", "Tennis", "Cricket", "Soccer")
+# qに要素を追加
+q2 <- c(q, "Hockey", "Lacrosse", "Hockey", "Water Polo", "Hockey", "Lacrosse")
+# factorに変換
+q2Factor <- as.factor(q2)
+q2Factor
+```
+
+`as.numeric(q2Factor)`で各レベルを見てみると重複してないことがわかる。
+
+```{r}
+as.numeric(q2Factor)
+```
+
+一意な値を持つMapみたいな感じ?
+
+## ￼4.5 : 関数(Function)の呼び出し
+
+## 4.6 : 関数ドキュメント
+
+`?mean` のようにコンソールで実行するとドキュメントを引ける。
+
+```
+?`+`
+```
+
+関数を検索する`apropos`という関数もある
+
+```{r}
+apropos("mea")
+```
+
+とかで演算子とかのドキュメント開ける
+
+## 4.7 : 欠損値
+
+NAとNULLはいわゆる欠損値
+
+### 4.7.1 : NA
+
+VectorにNAという値が出てくることがある。これは`is.na`で判定できる。
+
+```{r}
+z <- c(1,2, NA, 8,3, NA, 3)
+z
+```
+
+```{r}
+is.na(z)
+```
+
+### 4.7.2 : NULL
+
+NULLはNULLであり、何もないということ
+
+```{r}
+z <- c(1, NULL, 3)
+z
+```
+
+Vectorの中にNULLは存在できない。`is.null`で判定できる
