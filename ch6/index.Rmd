@@ -1,0 +1,89 @@
+---
+title: "6章 R へのデータ取り込み"
+author: "azu"
+date: "2015年8月15日"
+output: html_document
+---
+
+## 6.1: CSVの読み込み
+
+```{r}
+theUrl <- "http://www.jaredlander.com/data/Tomato%20First.csv"
+tomato <- read.table(file = theUrl, header =  TRUE, sep = ",")
+```
+
+headで内容を見られる
+
+```{r}
+head(tomato)
+```
+
+`stringsAsFactors`というオプションで、FALSEとすればfactorではなくなるので、
+重複したものも扱えて便利
+
+`read.csv2`はヨーロッパで一般的である小数点がコンマで区切り文字がセミ コロンの CSV ファイルを読み込むための関数です
+
+## 6.2: Excelの読み込み
+
+Excelは今のところまともな方法がない。
+XML経由で行ける?でもパッケージがない
+
+## 6.3 : データベースからの読み込み
+
+ODBC接続
+
+## 6.4 : 他社統計ツールからの読み込み
+
+一般的に使われてる統計ツールからデータ読み込む関数
+
+SPSS Stata SAS Octave Minitab Systat
+
+それぞれに対応するものが`read.*`に存在してる。
+
+## 6.5 : R バイナリファイル
+
+RDataファイルという任意のRオブジェクトを表現するためのバイナリファイルがある。
+OS間関係なく渡せる。
+
+```{r}
+save(tomato, file ="data/tomato.rdata")
+# 自動でディレクトリは作れてないため事前に`data/`は必要
+rm(tomato)
+load("data/tomato.rdata");
+head(tomato)
+```
+
+## 6 . 6 : R に 入 って い る デ ー タ
+
+> 例えば、ggplot2 パッケージには diamonds というデータセッ トが同梱されています。このデータは、data 関数によって読み込むことができます。
+
+パッケージにデータセットが入ってる場合がある。
+
+```{r}
+require(ggplot2)
+data(diamonds)
+head(diamonds)
+```
+
+## 6.7 : Web サイトからの抽出
+
+XMLパッケージの`readHTMLTable`を使ってHTMLテーブルからデータを取り出す事が出来る
+
+```{r}
+require(XML)
+theUrl <- "http://www.jaredlander.com/2012/02/another-kind-of-super-bowl-pool/"
+bowlPool <- readHTMLTable(theUrl, which = 1, header = FALSE, stringAsFactors = FALSE)
+bowlPool
+```
+
+## 6.8:まとめ
+
+Rにデータ読み込む一般的な方法はCSVから`read.table`を使うこと。
+RODBCはデータベースから色々読み込める。
+HTMLはXMLパッケージでパースする。
+
+保存するにはRDataが便利
+
+
+
+
