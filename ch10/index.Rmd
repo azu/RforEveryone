@@ -1,0 +1,59 @@
+---
+title: "10 章 ループ・Rの方法ではない反復方法"
+author: "azu"
+date: "2015年9月21日"
+output: html_document
+---
+
+Rではベクトルで処理するのでforループとかはあんまり使わない。
+でも一応ある
+
+## 1 0 . 1 : f o r ル ープ
+
+```{r}
+for(i in 1:10){
+    print(i)
+}
+```
+
+forループでもできるけど、printはベクトルをサポートしてるので
+
+```{r}
+print(1:10)
+```
+
+でも似たようなことができる。
+
+```{r}
+fruit <- c("apple", "banana", "pomegranate")
+fruitLength <- rep(NA, length(fruit))
+fruitLength
+```
+
+ベクトルループ
+
+```{r}
+names(fruitLength) <- fruit
+for (a in fruit){
+    fruitLength[a] <- nchar(a)
+}
+fruitLength
+```
+
+ベクトル化するともっとシンプル
+
+```{r}
+fruitLength2 <- nchar(fruit)
+names(fruitLength2) <- fruit
+fruitLength2
+```
+
+## 1 0 . 2 : w h i l e ル ープ
+
+```{r}
+x <- 1
+while(x <= 5){
+    print(x)
+    x <- x + 1
+}
+```
