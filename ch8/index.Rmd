@@ -1,0 +1,75 @@
+---
+title: "8章Rの関数を書く"
+author: "azu"
+date: "2015年9月21日"
+output: html_document
+---
+
+ハローワールド関数う
+
+```{r}
+say.hello <- function(){
+    print("Hello World!")
+}
+```
+
+## 8.2 : 関数の引数
+
+`sprintf`関数について
+
+```{r}
+sprintf("Hello %s", "Jared")
+```
+
+引数の扱い
+
+```{r}
+hello.person <- function(first, last){
+    print(sprintf("Hello %s %s", first, last))
+}
+hello.person("Jared", "Lander")
+
+hello.person(first = "Jared", last = "Lander")
+```
+
+## 8.2.1 : デフォルト引数
+
+デフォルト引数はふつうに = を与えるだけ
+
+
+```{r}
+hello.person <- function(first, last = "DORE"){
+    print(sprintf("Hello %s %s", first, last))
+}
+hello.person("Jared")
+```
+
+## 8.2.2 : 追加の引数
+
+可変長の引数は`...`を使う
+
+```{r}
+hello.person <- function(first, last = "Doe", ...){
+    print(sprintf("Hello %s %s", first, last))
+}
+hello.person("Jared", "lander", "Goodbye")
+```
+
+## 8.3 : 値の返却
+
+与えを返す時はreturnを使うか、最後に評価されたものが返される。
+
+```{r}
+double.num <- function(x){
+    return(x * 2)
+}
+double.num(10)
+```
+
+## 8.4 : do.call
+
+文字列として関数名を渡すと評価できる仕組み
+
+```{r}
+do.call("hello.person", args = list(first = "Jared", last = "Lander"))
+```
