@@ -69,4 +69,78 @@ boxplot(diamonds$carat)
 箱の中身が表示されてないけど、箱の中にもデータがある。
 外れ値が簡単に分かる?
 
+## 7.2 ggplot2
 
+ggplot2が人気。
+
+```
+install.packages("ggplot2", dependencies=TRUE)
+```
+
+でインストールして
+
+```{r}
+library(ggplot2)
+```
+
+で読み込んで利用する。
+
+```{r}
+ggplot(data = diamonds) + geom_histogram(aes(x = carat))
+```
+
+## 7.2.2 : ggplot2 散布図
+
+```{r}
+ggplot(diamonds, aes(x = carat, y = price)) + geom_point()
+```
+
+ggplot対して、`geom_point()`で散布図のレイヤーを追加する。
+
+`g`変数にggplotオブジェクトを入れる。
+
+```{r}
+g <- ggplot(diamonds, aes(x = carat, y = price))
+```
+
+`facet_wrap`で画面枠を追加してみる
+
+```{r}
+g + geom_point(aes(color = color)) + facet_wrap(~color)
+```
+
+## 7.2.3 : ggplot2の箱ひげ図とヴァイオリン・プロット
+
+ggplotでも箱ひげグラフのプロット
+
+`geom_boxplot()`で箱ひげグラフをだせる。
+y=キャラット、x=カット数
+
+```{r}
+ggplot(diamonds, aes(y = carat, x = cut)) + geom_boxplot()
+```
+
+## 7.2.4 : ggplot2における折れ線グラフ
+
+折れ線グラフは連続的なデータを表示しやすいけど、連続性は必須ではない。
+
+エコノミックのデータを日付を扱って、折れ線 `geom_line()`で出してみる
+
+
+```{r}
+ggplot(economics, aes(x = date, y = pop)) + geom_line()
+```
+
+## 7.2.5 : テーマ
+
+ggplotはテーマという機能ががあり、ggthemeというパッケージで簡単に扱える。
+
+```{r}
+require(ggthemes)
+
+g2 <- ggplot(diamonds, aes(x=carat, y=price)) + geom_point(aes(color = color))
+
+g2 + theme_economist() + scale_colour_economist()
+```
+
+ggplotは+で色々追加していく。
